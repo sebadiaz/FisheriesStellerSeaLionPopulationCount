@@ -43,13 +43,46 @@ plt.imshow(current[0])
 train = pd.read_csv('train.csv',usecols=["adult_males", "subadult_males", "adult_females", "juveniles", "pups"],nrows=nbimage)
 train = pd.read_csv('train.csv',usecols=["adult_males"],nrows=nbimage)
 print train
+pool_class = MaxPooling2D
 model = Sequential()
-model.add(Convolution2D(32, 3, 3, activation='relu', input_shape=(xcol,ycol,3)))
-model.add(Convolution2D(32, 3, 3, activation='relu'))
-model.add(MaxPooling2D(pool_size=(2,2)))
+model.add(ZeroPadding2D((1,1), input_shape=(xcol,ycol,3)))
+model.add(Convolution2D(64, 3, 3, activation='relu', name='conv1_1'))
+    model.add(ZeroPadding2D((1, 1)))
+    model.add(Convolution2D(64, 3, 3, activation='relu', name='conv1_2'))
+    model.add(pool_class((2, 2), strides=(2, 2)))
+
+    model.add(ZeroPadding2D((1, 1)))
+    model.add(Convolution2D(128, 3, 3, activation='relu', name='conv2_1'))
+    model.add(ZeroPadding2D((1, 1)))
+    model.add(Convolution2D(128, 3, 3, activation='relu', name='conv2_2'))
+    model.add(pool_class((2, 2), strides=(2, 2)))
+
+    model.add(ZeroPadding2D((1, 1)))
+    model.add(Convolution2D(256, 3, 3, activation='relu', name='conv3_1'))
+    model.add(ZeroPadding2D((1, 1)))
+    model.add(Convolution2D(256, 3, 3, activation='relu', name='conv3_2'))
+    model.add(ZeroPadding2D((1, 1)))
+    model.add(Convolution2D(256, 3, 3, activation='relu', name='conv3_3'))
+    model.add(pool_class((2, 2), strides=(2, 2)))
+
+    model.add(ZeroPadding2D((1, 1)))
+    model.add(Convolution2D(512, 3, 3, activation='relu', name='conv4_1'))
+    model.add(ZeroPadding2D((1, 1)))
+    model.add(Convolution2D(512, 3, 3, activation='relu', name='conv4_2'))
+    model.add(ZeroPadding2D((1, 1)))
+    model.add(Convolution2D(512, 3, 3, activation='relu', name='conv4_3'))
+    model.add(pool_class((2, 2), strides=(2, 2)))
+
+    model.add(ZeroPadding2D((1, 1)))
+    model.add(Convolution2D(512, 3, 3, activation='relu', name='conv5_1'))
+    model.add(ZeroPadding2D((1, 1)))
+    model.add(Convolution2D(512, 3, 3, activation='relu', name='conv5_2'))
+    model.add(ZeroPadding2D((1, 1)))
+    model.add(Convolution2D(512, 3, 3, activation='relu', name='conv5_3'))
+    model.add(pool_class((2, 2), strides=(2, 2)))
 model.add(Dropout(0.25))
 model.add(Flatten())
-model.add(Dense(128, activation='relu'))
+model.add(Dense(32, activation='relu'))
 model.add(Dropout(0.5))
 model.add(Dense(1, activation='softmax'))
 
@@ -60,3 +93,4 @@ model.compile(loss='mean_squared_error',
 
 model.fit(current, np.array(train), 
           batch_size=1, nb_epoch=10, verbose=1)
+
