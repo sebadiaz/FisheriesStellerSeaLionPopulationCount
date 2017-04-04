@@ -3,8 +3,8 @@ from scipy import misc
 from keras.datasets import mnist
 from keras.models import Sequential
 	
-from keras.layers import Dense, Dropout, Activation, Flatten
-from keras.layers import Convolution2D, MaxPooling2D
+from keras.layers import Dense, Dropout, Activation, Flatten, Reshape
+from keras.layers import Convolution2D, MaxPooling2D, ZeroPadding2D
 from keras.utils import np_utils
 import numpy as np
 np.random.seed(123)  # for reproducibility
@@ -47,50 +47,52 @@ pool_class = MaxPooling2D
 model = Sequential()
 model.add(ZeroPadding2D((1,1), input_shape=(xcol,ycol,3)))
 model.add(Convolution2D(64, 3, 3, activation='relu', name='conv1_1'))
-    model.add(ZeroPadding2D((1, 1)))
-    model.add(Convolution2D(64, 3, 3, activation='relu', name='conv1_2'))
-    model.add(pool_class((2, 2), strides=(2, 2)))
+model.add(ZeroPadding2D((1, 1)))
+model.add(Convolution2D(64, 3, 3, activation='relu', name='conv1_2'))
+model.add(pool_class((2, 2), strides=(2, 2)))
 
-    model.add(ZeroPadding2D((1, 1)))
-    model.add(Convolution2D(128, 3, 3, activation='relu', name='conv2_1'))
-    model.add(ZeroPadding2D((1, 1)))
-    model.add(Convolution2D(128, 3, 3, activation='relu', name='conv2_2'))
-    model.add(pool_class((2, 2), strides=(2, 2)))
+model.add(ZeroPadding2D((1, 1)))
+model.add(Convolution2D(128, 3, 3, activation='relu', name='conv2_1'))
+model.add(ZeroPadding2D((1, 1)))
+model.add(Convolution2D(128, 3, 3, activation='relu', name='conv2_2'))
+model.add(pool_class((2, 2), strides=(2, 2)))
 
-    model.add(ZeroPadding2D((1, 1)))
-    model.add(Convolution2D(256, 3, 3, activation='relu', name='conv3_1'))
-    model.add(ZeroPadding2D((1, 1)))
-    model.add(Convolution2D(256, 3, 3, activation='relu', name='conv3_2'))
-    model.add(ZeroPadding2D((1, 1)))
-    model.add(Convolution2D(256, 3, 3, activation='relu', name='conv3_3'))
-    model.add(pool_class((2, 2), strides=(2, 2)))
+model.add(ZeroPadding2D((1, 1)))
+model.add(Convolution2D(256, 3, 3, activation='relu', name='conv3_1'))
+model.add(ZeroPadding2D((1, 1)))
+model.add(Convolution2D(256, 3, 3, activation='relu', name='conv3_2'))
+model.add(ZeroPadding2D((1, 1)))
+model.add(Convolution2D(256, 3, 3, activation='relu', name='conv3_3'))
+model.add(pool_class((2, 2), strides=(2, 2)))
 
-    model.add(ZeroPadding2D((1, 1)))
-    model.add(Convolution2D(512, 3, 3, activation='relu', name='conv4_1'))
-    model.add(ZeroPadding2D((1, 1)))
-    model.add(Convolution2D(512, 3, 3, activation='relu', name='conv4_2'))
-    model.add(ZeroPadding2D((1, 1)))
-    model.add(Convolution2D(512, 3, 3, activation='relu', name='conv4_3'))
-    model.add(pool_class((2, 2), strides=(2, 2)))
+model.add(ZeroPadding2D((1, 1)))
+model.add(Convolution2D(512, 3, 3, activation='relu', name='conv4_1'))
+model.add(ZeroPadding2D((1, 1)))
+model.add(Convolution2D(512, 3, 3, activation='relu', name='conv4_2'))
+model.add(ZeroPadding2D((1, 1)))
+model.add(Convolution2D(512, 3, 3, activation='relu', name='conv4_3'))
+model.add(pool_class((2, 2), strides=(2, 2)))
 
-    model.add(ZeroPadding2D((1, 1)))
-    model.add(Convolution2D(512, 3, 3, activation='relu', name='conv5_1'))
-    model.add(ZeroPadding2D((1, 1)))
-    model.add(Convolution2D(512, 3, 3, activation='relu', name='conv5_2'))
-    model.add(ZeroPadding2D((1, 1)))
-    model.add(Convolution2D(512, 3, 3, activation='relu', name='conv5_3'))
-    model.add(pool_class((2, 2), strides=(2, 2)))
-model.add(Dropout(0.25))
-model.add(Flatten())
-model.add(Dense(32, activation='relu'))
-model.add(Dropout(0.5))
-model.add(Dense(1, activation='softmax'))
+model.add(ZeroPadding2D((1, 1)))
+model.add(Convolution2D(512, 3, 3, activation='relu', name='conv5_1'))
+model.add(ZeroPadding2D((1, 1)))
+model.add(Convolution2D(512, 3, 3, activation='relu', name='conv5_2'))
+model.add(ZeroPadding2D((1, 1)))
+model.add(Convolution2D(512, 3, 3, activation='relu', name='conv5_3'))
+model.add(pool_class((2, 2), strides=(2, 2)))
+#https://github.com/costapt/vess2ret/blob/master/models.py
+#model.add(Dropout(0.25))
+#model.add(Flatten())
+#model.add(Dense(32, activation='relu'))
+#model.add(Dropout(0.5))
+#model.add(Dense(1, activation='softmax'))
 
 model.compile(loss='mean_squared_error',
               optimizer='adam',
               metrics=['accuracy'])
 
 
-model.fit(current, np.array(train), 
-          batch_size=1, nb_epoch=10, verbose=1)
+#model.fit(current, np.array(train), 
+#          batch_size=1, nb_epoch=10, verbose=1)
+model.fit(current,current,  batch_size=1, nb_epoch=10, verbose=1)
 
